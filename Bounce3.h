@@ -25,6 +25,10 @@
   Main code by Thomas O Fredericks (tof@t-o-f.info)
   Previous contributions by Eric Lowry, Jim Schimpf and Tom Harkaway
   * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * Forked by Nelson Vides to implement ANALOG_PINS
+ * and modern C++ features
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 #ifndef Bounce2_h
 #define Bounce2_h
@@ -44,7 +48,7 @@ class Bounce
 {
 public:
     // Create an instance of the bounce library
-    Bounce();
+    explicit Bounce(uint8_t pin);
 
     // Attach to a pin (and also sets initial state)
     void attach(uint8_t pin);
@@ -73,22 +77,14 @@ public:
     uint16_t getValue() const;
 #endif
 
-    // Partial compatibility for programs written with Bounce version 1
-    bool risingEdge() { return rose(); }
-    bool fallingEdge() { return fell(); }
-    Bounce(uint8_t pin, unsigned long interval_millis ) : Bounce() {
-        attach(pin);
-        interval(interval_millis);
-    }
-
 protected:
     unsigned long previous_millis = 0;
     uint16_t interval_millis = 10;
 #ifdef ANALOG_PINS
-    uint16_t value;
+    uint16_t value = 0;
 #endif
     uint8_t state = 0;
-    uint8_t pin = 0;
+    uint8_t pin;
 };
 
 #endif
